@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/willian/rails-api-utils.svg?branch=master)](https://travis-ci.org/willian/rails-api-utils) 
+
 # Rails::API::Utils
 Short description and motivation.
 
