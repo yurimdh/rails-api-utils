@@ -21,4 +21,5 @@ Gem::Specification.new do |s|
   s.add_dependency "rails_param", "0.9.0", "< 1.0"
   s.add_development_dependency "byebug"
   s.add_development_dependency "sqlite3"
+  s.add_development_dependency "simplecov"
 end

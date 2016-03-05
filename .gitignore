@@ -1,5 +1,6 @@
-.byebug_history
 .bundle/
+.byebug_history
+coverage
 log/*.log
 pkg/
 test/dummy/db/*.sqlite3
