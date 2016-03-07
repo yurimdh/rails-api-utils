@@ -9,6 +9,7 @@ require "sprockets/railtie"
 require "rails/test_unit/railtie"
 
 Bundler.require(*Rails.groups)
+require "rails_param"
 require "rails/api/utils"
 
 module Dummy

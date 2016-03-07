@@ -67,10 +67,13 @@ GEM
       nokogiri (>= 1.5.9)
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
+    metaclass (0.0.4)
     method_source (0.8.2)
     mime-types (2.99)
     mini_portile2 (2.0.0)
     minitest (5.8.4)
+    mocha (1.1.0)
+      metaclass (~> 0.0.1)
     nio4r (1.2.1)
     nokogiri (1.6.7.2)
       mini_portile2 (~> 2.0.0.rc2)
@@ -143,6 +146,7 @@ PLATFORMS
 
 DEPENDENCIES
   byebug
+  mocha
   rails-api-utils!
   sass-rails (~> 5.0)
   simplecov
