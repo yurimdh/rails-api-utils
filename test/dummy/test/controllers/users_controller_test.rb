@@ -18,4 +18,23 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     user = JSON.parse(response.body, symbolize_names: true)
     assert_equal "Joe Doe", user[:name]
   end
+
+  test "creates an user" do
+    post "/users", params: { name: "Mithrandir" }
+    assert_response :created
+    refute_empty response.body
+
+    user = JSON.parse(response.body, symbolize_names: true)
+    assert_equal "Mithrandir", user[:name]
+  end
+
+  test "returns a bad request" do
+    post "/users", params: { name: "" }
+    assert_response :bad_request
+    refute_empty response.body
+
+    data = JSON.parse(response.body, symbolize_names: true)
+    assert_equal "Invalid paramaters", data[:message]
+    assert_equal ["Name can't be blank"], data[:errors]
+  end
 end

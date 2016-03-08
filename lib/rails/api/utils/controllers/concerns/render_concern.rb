@@ -17,6 +17,25 @@ module Rails
 
               render render_options
             end
+
+            def render_created(data, serializer: nil)
+              render(
+                root: false,
+                status: :created,
+                json: data,
+                serializer: serializer
+              )
+            end
+
+
+            def render_error(message, status: :bad_request, errors: nil)
+              data = {
+                message: message
+              }
+              data[:errors] = Array(errors) unless errors.nil?
+
+              render status: status, json: data
+            end
           end
         end
       end
