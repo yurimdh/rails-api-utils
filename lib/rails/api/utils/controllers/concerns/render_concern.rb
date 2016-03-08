@@ -36,6 +36,10 @@ module Rails
 
               render status: status, json: data
             end
+
+            def render_not_found(message = "Resource not found.")
+              render_error message, status: :not_found
+            end
           end
         end
       end

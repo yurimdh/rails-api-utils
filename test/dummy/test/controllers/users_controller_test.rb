@@ -37,4 +37,13 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Invalid paramaters", data[:message]
     assert_equal ["Name can't be blank"], data[:errors]
   end
+
+  test "returns not found message" do
+    get "/users/fake/route"
+    assert_response :not_found
+    refute_empty response.body
+
+    data = JSON.parse(response.body, symbolize_names: true)
+    assert_equal "Not found", data[:message]
+  end
 end
