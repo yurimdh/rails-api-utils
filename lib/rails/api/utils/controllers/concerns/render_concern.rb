@@ -40,6 +40,14 @@ module Rails
             def render_not_found(message = "Resource not found.")
               render_error message, status: :not_found
             end
+
+            def render_unauthorized(message = "Invalid credentials")
+              render_error(message, status: :unauthorized)
+            end
+
+            def render_forbidden(message = "Not allowed")
+              render_error(message, status: :forbidden)
+            end
           end
         end
       end

@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
   s.add_dependency "rails", ">= 5.0.0.beta2", "< 5.1"
   s.add_dependency "active_model_serializers", "0.10.0.rc4", "< 0.11"
   s.add_dependency "rails_param", "0.9.0", "< 1.0"
+  s.add_development_dependency "bcrypt"
   s.add_development_dependency "byebug"
   s.add_development_dependency "sqlite3"
   s.add_development_dependency "simplecov"
