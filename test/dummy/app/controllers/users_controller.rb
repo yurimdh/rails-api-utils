@@ -32,4 +32,11 @@ class UsersController < ApplicationController
     user = { name: "Joe Doe" }
     render_success user
   end
+
+  def destroy
+    user = User.find(params[:id])
+    user.destroy
+
+    render_no_content
+  end
 end

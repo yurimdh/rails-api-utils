@@ -71,4 +71,16 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     data = JSON.parse(response.body, symbolize_names: true)
     assert_equal "Not allowed", data[:message]
   end
+
+  test "doesn't return any content when a user is deleted" do
+    post "/users", params: { name: "Mithrandir", password: "123456" }
+    assert_response :created
+
+    user = JSON.parse(response.body, symbolize_names: true)
+
+    delete "/users/#{user[:id]}"
+
+    assert_response :no_content
+    assert_empty response.body
+  end
 end

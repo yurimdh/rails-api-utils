@@ -48,6 +48,10 @@ module Rails
             def render_forbidden(message = "Not allowed")
               render_error(message, status: :forbidden)
             end
+
+            def render_no_content
+              head :no_content
+            end
           end
         end
       end
