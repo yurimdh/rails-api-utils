@@ -52,6 +52,35 @@ module Rails
             def render_no_content
               head :no_content
             end
+
+            # `_render_option_json` and `_render_with_renderer_json` are both
+            # methods from ActiveModel::Serializer and it's redefined here to
+            # use `deep_keys_camelize`
+            renderer_methods = %i(_render_option_json _render_with_renderer_json)
+            renderer_methods.each do |renderer_method|
+              define_method(renderer_method) do |resource, options|
+                # `get_serializer` is a method from ActiveModel::Serializer and
+                # it's defined in `lib/action_controller/serialization.rb`
+                serializer = get_serializer(resource, options)
+
+                if serializer
+                  resource = serializer
+                  options.delete(:serializer)
+                  options.delete(:each_serializer)
+                end
+
+                resource = resource.as_json
+                resource = resource.deep_keys_camelize if camel_case?
+
+                super(resource, options)
+              end
+            end
+
+            private
+
+            def camel_case?
+              request.headers["HTTP_X_KEY_FORMAT"] == "camelCase"
+            end
           end
         end
       end

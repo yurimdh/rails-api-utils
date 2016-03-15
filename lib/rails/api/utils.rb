@@ -1,4 +1,5 @@
 require "active_model_serializers"
+require "rails/api/utils/railtie"
 
 module Rails
   module API

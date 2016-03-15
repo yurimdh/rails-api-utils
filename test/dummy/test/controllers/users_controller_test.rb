@@ -83,4 +83,13 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_response :no_content
     assert_empty response.body
   end
+
+  test "understands camelCase keys" do
+    post "/users", params: { name: "Mithrandir", password: "123456" },
+                   headers: { HTTP_X_KEY_FORMAT: "camelCase" }
+    assert_response :created
+    user = JSON.parse(response.body, symbolize_names: true)
+    assert_equal "Mithrandir", user[:name]
+    assert_equal "Mithrandir", user[:userName]
+  end
 end
