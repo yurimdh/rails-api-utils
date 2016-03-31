@@ -26,6 +26,15 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Joe Doe", user[:name]
   end
 
+  test "returns not_found when user ID doesn't exist" do
+    get "/users/91392830"
+    assert_response :not_found
+    refute_empty response.body
+
+    data = JSON.parse(response.body, symbolize_names: true)
+    assert_equal "Resource not found.", data[:message]
+  end
+
   test "creates an user" do
     post "/users", params: { name: "Mithrandir", password: "123456" }
     assert_response :created
@@ -35,14 +44,15 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Mithrandir", user[:name]
   end
 
-  test "returns a bad request" do
+  test "returns a bad request when data is invalid" do
     post "/users", params: { name: "name" }
     assert_response :bad_request
     refute_empty response.body
 
     data = JSON.parse(response.body, symbolize_names: true)
-    assert_equal "Invalid paramaters", data[:message]
-    assert_equal ["Password can't be blank"], data[:errors]
+    assert_equal "Validation failed.", data[:message]
+    assert_equal "password", data.dig(:errors, 0, :field)
+    assert_equal "'password' can't be blank, 'password' is too short (minimum is 6 characters).", data.dig(:errors, 0, :message)
   end
 
   test "returns not found message" do
@@ -91,5 +101,25 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     user = JSON.parse(response.body, symbolize_names: true)
     assert_equal "Mithrandir", user[:name]
     assert_equal "Mithrandir", user[:userName]
+  end
+
+  test "returns an in valid parameter message when RailsParam validation fails" do
+    post "/users", params: { password: "123456" }
+    assert_response :bad_request
+    refute_empty response.body
+
+    data = JSON.parse(response.body, symbolize_names: true)
+    assert_equal "Invalid parameter.", data[:message]
+    assert_equal "name", data.dig(:errors, 0, :field)
+    assert_equal "'name' is required.", data.dig(:errors, 0, :message)
+  end
+
+  test "renders 500 error" do
+    get "/error"
+    assert_response :error
+    refute_empty response.body
+
+    data = JSON.parse(response.body, symbolize_names: true)
+    assert_equal "Something went wrong.", data[:message]
   end
 end

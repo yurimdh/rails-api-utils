@@ -6,6 +6,15 @@ module Rails
           extend ActiveSupport::Concern
 
           included do
+            rescue_from Exception, with: :rescue_server
+            rescue_from ActionController::RoutingError, with: :rescue_not_found
+            rescue_from(
+              RailsParam::Param::InvalidParameterError,
+              with: :rescue_invalid_parameters
+            )
+            rescue_from ActiveRecord::RecordNotFound, with: :rescue_not_found
+            rescue_from ActiveRecord::RecordInvalid, with: :rescue_invalid_record
+
             def render_success(data, serializer: nil)
               serializer_key = if data.respond_to?(:to_ary)
                                  :each_serializer
@@ -81,6 +90,41 @@ module Rails
             def camel_case?
               request.headers["HTTP_X_KEY_FORMAT"] == "camelCase"
             end
+
+            def rescue_invalid_parameters(exception)
+              render_error(
+                "Invalid parameter.",
+                errors: [{
+                  field: exception.param,
+                  message: exception.message.gsub("Parameter", "'#{exception.param}'") + "."
+                }]
+              )
+            end
+
+            def rescue_invalid_record(exception)
+              errors = exception.record.errors.messages.map do |field, messages|
+                {
+                  field: field,
+                  message: messages.map { |m| "'#{field}' #{m}" }.join(", ") + "."
+                }
+              end
+
+              render_error("Validation failed.", errors: errors)
+            end
+
+            def rescue_server(exception)
+              if params.key?(:nocatch)
+                raise exception
+              else
+                Rails.logger.fatal(exception)
+                render_error("Something went wrong.", status: :server_error)
+              end
+            end
+
+            def rescue_not_found
+              render_error("Resource not found.", status: :not_found)
+            end
+
           end
         end
       end

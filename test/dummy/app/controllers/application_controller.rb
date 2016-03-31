@@ -6,6 +6,10 @@ class ApplicationController < ActionController::API
     render_not_found "Not found"
   end
 
+  def render_500
+    some_undefined_variable
+  end
+
   def current_user
     @current_user
   end

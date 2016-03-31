@@ -16,16 +16,12 @@ class UsersController < ApplicationController
   end
 
   def create
-    param! :name, String
+    param! :name, String, required: true
     param! :password, String
 
-    user = User.create(name: params[:name],
+    user = User.create!(name: params[:name],
                        password: params[:password])
-    if user.valid?
-      render_created user, serializer: UserSerializer
-    else
-      render_error "Invalid paramaters", errors: user.errors
-    end
+    render_created user, serializer: UserSerializer
   end
 
   def private
